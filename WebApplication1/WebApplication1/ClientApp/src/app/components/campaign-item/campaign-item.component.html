@@ -2,7 +2,7 @@
   <div class="card">
     <div class="card-header">
       {{ campaign.name }}
-      <button type="button" class="btn btn-sm btn-danger float-right ml-1">
+      <button type="button" class="btn btn-sm btn-danger float-right ml-1" (click)="onDeleteCampaign(campaign)">
         <fa name="trash"></fa>
       </button>
       <button type="button" class="btn btn-sm btn-warning float-right" [routerLink]="['/campaigns/edit', campaign.id]">
@@ -16,10 +16,10 @@
               *ngFor="let keyword of campaign.keywords">{{ keyword }}</span>
       </div>
       <div>
-        <span>Bid amount: </span><span>{{campaign.bidAmount | currency:'EUR' }}</span>
+        <span>Bid amount: </span><span>{{campaign.bidAmount | currency:'USD' }}</span>
       </div>
       <div>
-        <span>Fund: </span><span>{{campaign.fund | currency:'EUR' }}</span>
+        <span>Fund: </span><span>{{campaign.fund | currency:'USD' }}</span>
       </div>
       <div>
         <span>Status:</span>

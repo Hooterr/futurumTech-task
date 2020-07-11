@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -46,21 +47,26 @@ namespace WebApplication1.Controllers
             if (id != campaign.Id)
                 return BadRequest();
 
-            // TODO return not found when not found
-            var success = _campaigns.Update(campaign);
-            if (!success)
-                return BadRequest();
 
-            return NoContent();
+            return _campaigns.Update(campaign) switch
+            {
+                OperationResults.Fail       => BadRequest(),
+                OperationResults.Success    => NoContent(),
+                OperationResults.NotFound   => NotFound(),
+                _                           => throw new NotImplementedException(),
+            };
         }
 
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            if (_campaigns.Delete(id))
-                return NoContent();
-
-            return NotFound();
+            return _campaigns.Delete(id) switch
+            {
+                OperationResults.NotFound   => NotFound(),
+                OperationResults.Fail       => BadRequest(),
+                OperationResults.Success    => NoContent(),
+                _                           => throw new NotImplementedException()
+            };
         }
 
         [HttpGet]

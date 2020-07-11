@@ -19,7 +19,7 @@ export class CampaignsService {
   }
 
   public get(id: number): Observable<Campaign> {
-    return this.http.get<Campaign>(`${this.baseUrl}${this.campaignsEndpoint}/${this.baseUrl}`);
+    return this.http.get<Campaign>(`${this.baseUrl}${this.campaignsEndpoint}/${id}`);
   }
 
   public create(campaign: Campaign): Observable<any> {
@@ -27,7 +27,7 @@ export class CampaignsService {
   }
 
   public update(campaign: Campaign): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}${this.campaignsEndpoint}`, campaign);
+    return this.http.put<any>(`${this.baseUrl}${this.campaignsEndpoint}/${campaign.id}`, campaign);
   }
 
   public delete(id: number): Observable<any> {

@@ -8,8 +8,8 @@ namespace WebApplication1.Services
     {
         CampaignDTO Get(int id);
         IEnumerable<CampaignDTO> GetAll();
-        bool Delete(int id);
+        OperationResults Delete(int id);
         int Create(CampaignDTO campaign);
-        bool Update(CampaignDTO campaign);
+        OperationResults Update(CampaignDTO campaign);
     }
 }

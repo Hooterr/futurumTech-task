@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Campaign } from '../../models/Campaign';
 
 @Component({
@@ -9,11 +9,16 @@ import { Campaign } from '../../models/Campaign';
 export class CampaignItemComponent implements OnInit {
 
   @Input() campaign: Campaign;
+  @Output() deleteCampaign: EventEmitter<Campaign> = new EventEmitter();
 
   constructor() { }
 
   ngOnInit() {
 
+  }
+
+  onDeleteCampaign(campaign: Campaign) {
+    this.deleteCampaign.emit(campaign);
   }
 
 }

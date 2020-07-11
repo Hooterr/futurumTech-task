@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, filter } from 'rxjs/operators';
 import { CustomValidators } from '../../custom-validators/arrayValidators';
 import { Campaign } from '../../models/Campaign';
 import { CampaignsService } from '../../services/campaigns.service';
@@ -19,6 +19,7 @@ export class CampaignEditComponent implements OnInit {
   cities: string[] = ['Kraków', 'Warszawa', 'Gdańsk', 'Wrocław', 'Opole'];
 
   campaignForm = this.fb.group({
+    id: [0, [Validators.required]],
     name: [null, [Validators.minLength(4), Validators.required]],
     keywords: [[], [CustomValidators.arrayMinLength(1)]],
     bidAmount: [null, [Validators.pattern('^[+-]?[0-9]+\.?[0-9]{0,2}$'), Validators.required, Validators.min(0.01)]],
@@ -45,7 +46,7 @@ export class CampaignEditComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private campaignService: CampaignsService,
-    private router: Router
+    private router: Router,
   ) {
   }
   
@@ -61,11 +62,20 @@ export class CampaignEditComponent implements OnInit {
       this.creating = true;
       return;
     }
-    // TODO Get data
     this.creating = false;
+    this.campaignService.get(campaignId).subscribe(
+      (campaign: Campaign) => {
+        console.log(campaign);
+        this.campaignForm.setValue(campaign);
+      },
+      (error: any) => {
+        console.log(error);
+        this.router.navigate(['/campaigns']);
+      });
   }
 
-  deleteKeyword(keyword: string) {
+  deleteKeyword($event, keyword: string) {
+    $event.preventDefault();
     const removeAt = this.keywords.value.indexOf(keyword);
     if (removeAt > -1) {
       this.keywords.value.splice(removeAt, 1);
@@ -87,12 +97,20 @@ export class CampaignEditComponent implements OnInit {
     this.keywords.markAsTouched();
   }
 
+  public onFocus(e: Event): void {
+    e.stopPropagation();
+    setTimeout(() => {
+      const inputEvent: Event = new Event('input');
+      e.target.dispatchEvent(inputEvent);
+    }, 0);
+  }
+
   searchKeyword(text$: Observable<string>) {
     return text$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      map(term => term.length < 2 ? []
-        : keywordsOptions.filter(v => v.toLowerCase().startsWith(term.toLocaleLowerCase())).splice(0, 10))
+      filter(term => term.length <= 2),
+      map(term => keywordsOptions.filter(v => v.toLowerCase().startsWith(term.toLocaleLowerCase())).splice(0, 10))
     )
   }
 
@@ -101,29 +119,29 @@ export class CampaignEditComponent implements OnInit {
     if (this.campaignForm.invalid)
       return;
 
+    this.busy = true;
+
     if (this.creating) {
-      this.busy = true;
       this.campaignService.create(this.campaignForm.value).subscribe(
         data => {
-          console.log(data);
           this.busy = false;
           this.router.navigate(['campaigns'])
         },
         error => {
-          console.log(error);
           this.busy = false;
         }
       )
 
     }
-
-    
-    /*console.log(this.name.errors);
-    console.log(this.keywords.errors);
-    console.log(this.bidAmount.errors);
-    console.log(this.fund.errors);
-    console.log(this.status.errors);
-    console.log(this.town.errors);
-    console.log(this.radius.errors);*/
+    else {
+      this.campaignService.update(this.campaignForm.value).subscribe(
+        reponse => {
+          this.busy = false;
+          this.router.navigate(['campaigns'])
+        },
+        error => {
+          this.busy = false;
+        });
+    }
   }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,12 +18,12 @@ namespace WebApplication1
             _db = db;
             _mapper = mapper;
         }
-        public bool Delete(int id)
+        public OperationResults Delete(int id)
         {
-            var entity = new Campaign()
-            {
-                CampaignId = id,
-            };
+            var entity = _db.Campaigns.Find(id);
+            if (entity == null)
+                return OperationResults.NotFound;
+
             _db.Entry(entity).State = EntityState.Deleted;
 
             try
@@ -31,10 +32,10 @@ namespace WebApplication1
             }
             catch
             {
-                return false;
+                return OperationResults.Fail;
             }
 
-            return true;
+            return OperationResults.Success;
         }
 
         public int Create(CampaignDTO campaign)
@@ -66,11 +67,14 @@ namespace WebApplication1
                 .ToList();
         }
 
-        public bool Update(CampaignDTO campaign)
+        public OperationResults Update(CampaignDTO campaign)
         {
-            var campaignEntity = _mapper.Map<Campaign>(campaign);
+            var entity = _db.Campaigns.Find(campaign.Id);
+            if (entity == null)
+                return OperationResults.NotFound;
 
-            _db.Entry(campaignEntity).State = EntityState.Modified;
+            _mapper.Map(campaign, entity);
+            _db.Entry(entity).State = EntityState.Modified;
 
             try
             {
@@ -78,10 +82,10 @@ namespace WebApplication1
             }
             catch (Exception ex)
             {
-                return false;
+                return OperationResults.Fail;
             }
 
-            return true;
+            return OperationResults.Success;
         }
     }
 }

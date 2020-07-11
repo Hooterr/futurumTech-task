@@ -4,9 +4,11 @@
 <div class="mt-3 row row-cols-1 row-cols-sm-2 row-cols-lg-3">
 
   <app-campaign-item *ngFor="let campaign of campaigns"
-                     [campaign]="campaign">
+                     [campaign]="campaign"
+                     (deleteCampaign)="onDeleteCampaign($event)">
   </app-campaign-item>
 </div>
+<h5 *ngIf="campaigns?.length < 1">No campaigns found.</h5>
 
 
 

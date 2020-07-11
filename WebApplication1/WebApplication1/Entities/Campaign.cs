@@ -17,7 +17,7 @@ namespace WebApplication1
         [MinLength(1)]
         public string[] Keywords { get; set; }
         [Required]
-        public decimal BidAmout { get; set; }
+        public decimal BidAmount { get; set; }
         [Required]
         public decimal CampaignFunds { get; set; }
         [Required]
