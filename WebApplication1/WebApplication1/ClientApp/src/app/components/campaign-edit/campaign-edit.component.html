@@ -1,0 +1,138 @@
+<div class="row">
+  <button type="button" class="btn btn-primary" routerLink="/campaigns">Back to the list </button>
+</div>
+<div class="mt-4">
+  <form novalidate [formGroup]="campaignForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="form-group col">
+        <label for="name">Name</label>
+        <input id="name" type="text" class="form-control" formControlName="name" required>
+        <div *ngIf="name.invalid && (name.dirty || name.touched || submited)"
+             class="alert alert-danger">
+          <div *ngIf="name.errors.required">
+            Name is required.
+          </div>
+          <div *ngIf="name.errors.minlength">
+            Name must be at least 4 characters long.
+          </div>
+        </div>
+      </div>
+      <div class="form-group col">
+        <label for="keywords">Keywords</label>
+        <span class="badge badge-info ml-1"
+              *ngFor="let keyword of keywords.value">
+          {{ keyword }}
+          <button class="btn btn-sm btn-info del-btn" (click)="deleteKeyword(keyword)">x</button>
+        </span>
+        <input formControlName="keywords" hidden />
+        <input id="keywords"
+               type="text"
+               class="form-control"
+               #keywordInput
+               [ngbTypeahead]="searchKeyword"
+               (selectItem)="keywordSelected($event, keywordInput)"
+               [editable]='false'>
+        <div *ngIf="keywords.invalid && (keywords.dirty || keywords.touched || submited)"
+             class="alert alert-danger">
+          <div *ngIf="keywords.errors.minLength">
+            You need to specify at least one keyword.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col">
+        <label for="bidAmountInput">Bid amount</label>
+        <div class="input-group">
+          <input id="bidAmountInput" type="text" class="form-control" formControlName="bidAmount" required>
+          <div class="input-group-append">
+            <div class="input-group-text">$</div>
+          </div>
+        </div>
+        <div *ngIf="bidAmount.invalid && (bidAmount.dirty || bidAmount.touched || submited)"
+             class="alert alert-danger">
+          <div *ngIf="bidAmount.errors.required">
+            This field is required.
+          </div>
+          <div *ngIf="bidAmount.errors.pattern">
+            This field must be a number d.dd
+          </div>
+          <div *ngIf="bidAmount.errors.min">
+            Bid must be bigger than that.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col">
+        <label for="fundInput">Funds</label>
+        <div class="input-group">
+          <input id="fundInput" type="text" class="form-control" formControlName="fund" required>
+          <div class="input-group-append">
+            <div class="input-group-text">$</div>
+          </div>
+        </div>
+        <div *ngIf="fund.invalid && (fund.dirty || fund.touched || submited)"
+             class="alert alert-danger">
+          <div *ngIf="fund.errors.required">
+            This field is required.
+          </div>
+          <div *ngIf="fund.errors.pattern">
+            This field must be a number d.dd
+          </div>
+          <div *ngIf="fund.errors.min">
+            Funds must be bigger than that.
+          </div>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start" style="padding-top:2.3em">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="statusInput" formControlName="status">
+          <label class="custom-control-label" for="statusInput">Status</label>
+        </div>
+        <span [ngClass]="{'badge ml-2' : true,
+                          'badge-success' : status.value,
+                          'badge-danger' : !status.value}">{{ status.value? 'ON' : 'OFF' }}</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-4">
+        <label for="townInput">Town</label>
+        <select class="custom-select" id="townInput" formControlName="town" required>
+          <option [ngValue]="null" disabled>Please select a city...</option>
+          <option *ngFor="let city of cities" [ngValue]="city">{{ city }}</option>
+        </select>
+        <div *ngIf="town.invalid && (town.dirty || town.touched || submited)"
+             class="alert alert-danger">
+          <div *ngIf="town.errors.required">
+            This field is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col-4">
+        <label for="radiusInput">Radius</label>
+        <div class="input-group">
+          <input id="radiusInput" type="text" class="form-control" formControlName="radius" required>
+          <div class="input-group-append">
+            <div class="input-group-text">km</div>
+          </div>
+        </div>
+        <div *ngIf="radius.invalid && (radius.dirty || radius.touched || submited)"
+             class="alert alert-danger">
+          <div *ngIf="radius.errors.required">
+            This field is required.
+          </div>
+          <div *ngIf="radius.errors.pattern">
+            This field must be a number d.dd
+          </div>
+          <div *ngIf="radius.errors.min">
+            Radius must be bigger than that.
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <button class="btn btn-primary" type="submit" [disabled]="busy">{{ busy ? 'Submiting' : 'Submit' }}</button>
+  </form>
+</div>
