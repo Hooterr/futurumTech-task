@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace WebApplication1
 {
+    /// <summary>
+    /// DTO object for <see cref="Campaign"/>
+    /// </summary>
     public class CampaignDTO
     {
         public int Id { get; set; }

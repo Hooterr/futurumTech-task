@@ -9,15 +9,34 @@ using WebApplication1.Services;
 
 namespace WebApplication1
 {
+    /// <summary>
+    /// Implementation of the campaign service
+    /// </summary>
     public class CampaignService : ICampaignService
     {
+        /// <summary>
+        /// Underlying db context for this service
+        /// </summary>
         private readonly ApplicationDataContext _db;
+
+        /// <summary>
+        /// Mapper for this service
+        /// </summary>
         private IMapper _mapper;
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="mapper"></param>
+        /// <param name="db"></param>
         public CampaignService(IMapper mapper, ApplicationDataContext db)
         {
             _db = db;
             _mapper = mapper;
         }
+
+        #region Implementation
+
         public OperationResults Delete(int id)
         {
             var entity = _db.Campaigns.Find(id);
@@ -86,6 +105,8 @@ namespace WebApplication1
             }
 
             return OperationResults.Success;
-        }
+        } 
+
+        #endregion
     }
 }

@@ -15,10 +15,6 @@ namespace WebApplication1
 {
     public class Startup
     {
-        // A trick to make in-memory db persistent
-        // When there aren't any open connections db gets deleted this variable stores an open connection
-        private SqliteConnection inMemorySqlite;
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -38,16 +34,15 @@ namespace WebApplication1
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            inMemorySqlite = new SqliteConnection("Data Source=:memory:");
-            inMemorySqlite.Open();
-
+            // Add dbcontext with in memory provider
             services.AddDbContext<ApplicationDataContext>(options =>
             {
-                options.UseSqlite(inMemorySqlite);
+                options.UseInMemoryDatabase(databaseName: "Test");
             });
 
+            // Register auto mapper
             services.AddAutoMapper(typeof(Startup));
-
+            // Register campaign service
             services.AddScoped<ICampaignService, CampaignService>();
         }
 
@@ -94,6 +89,7 @@ namespace WebApplication1
                 }
             });
 
+            // Make sure we have a database
             dbContext.Database.EnsureCreated();
         }
     }

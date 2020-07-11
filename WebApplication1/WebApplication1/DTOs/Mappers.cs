@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.DTOs
 {
+    /// <summary>
+    /// Mappers for the campaign DTOs
+    /// </summary>
     public class Mappers : Profile
     {
         public Mappers()
