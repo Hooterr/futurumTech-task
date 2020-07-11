@@ -1,3 +1,4 @@
+// Campaign's model
 export interface Campaign {
   id: number,
   name: string,

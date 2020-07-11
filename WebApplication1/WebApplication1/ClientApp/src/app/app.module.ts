@@ -9,7 +9,6 @@ import { AppComponent } from './app.component';
 import { CampaignEditComponent } from './components/campaign-edit/campaign-edit.component';
 import { CampaignItemComponent } from './components/campaign-item/campaign-item.component';
 import { CampaignListComponent } from './components/campaign-list/campaign-list.component';
-import { CounterComponent } from './counter/counter.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 
 
@@ -17,7 +16,6 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
   declarations: [
     AppComponent,
     NavMenuComponent,
-    CounterComponent,
     CampaignItemComponent,
     CampaignListComponent,
     CampaignEditComponent,

@@ -8,16 +8,20 @@ import { Campaign } from '../../models/Campaign';
 })
 export class CampaignItemComponent implements OnInit {
 
+  // The campaign to display
   @Input() campaign: Campaign;
+
+  // Delete event
   @Output() deleteCampaign: EventEmitter<Campaign> = new EventEmitter();
 
   constructor() { }
 
   ngOnInit() {
-
   }
 
+  // Delete campaign
   onDeleteCampaign(campaign: Campaign) {
+    // Fire the event
     this.deleteCampaign.emit(campaign);
   }
 

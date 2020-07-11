@@ -9,26 +9,28 @@ import { CampaignsService } from '../../services/campaigns.service';
 })
 export class CampaignListComponent implements OnInit {
 
+  // List of all campaigns
   campaigns: Campaign[];
 
   constructor(private campaignsService: CampaignsService) { }
 
   ngOnInit() {
+    // Get the campaigns from the server
     this.campaignsService.getAll().subscribe(
       (data: Campaign[]) => {
-        console.log(data)
         this.campaigns = data;
       },
-      error => console.log(error)
+      error => { }
     );
   }
 
   onDeleteCampaign(campaign: Campaign) {
+    // Delete campaign from the server
     this.campaignsService.delete(campaign.id).subscribe(
       (data) => {
-        console.log(data)
         this.campaigns.splice(this.campaigns.indexOf(campaign), 1);
       },
-      (error) => console.log(error));
+      (error) => { }
+    );
   }
 }
